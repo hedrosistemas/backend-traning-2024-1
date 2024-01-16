@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  emqx:
+    image: emqx/emqx:5.3
+    container_name: emqx
+    environment:
+      - EMQX_NAME=emqx
+      - EMQX_HOST=node1.emqx
+      - EMQX_NODE__DIST_LISTEN_MIN=6369
+      - EMQX_NODE__DIST_LISTEN_MAX=6379
+      - EMQX_LISTENER__TCP__EXTERNAL=1883
+      - EMQX_LOADED_PLUGINS=emqx_recon,emqx_retainer,emqx_management,emqx_auth_username
+    ports:
+      - 1883:1883
+      - 8883:8883
+      - 8083:8083
+      - 18083:18083
