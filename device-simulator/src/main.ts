@@ -1,55 +1,47 @@
-//SOLID
-//12 factories
-//Log
-//Variáveis ambientes
-//Code Linter
-//MQTT
-//Container
+import { HumidityRandomGenerator } from './infra/humidity_random_generator'
+import { LoggerInitializer } from './infra/logger'
+import { Messaging } from './infra/messaging'
+import { TempRandomGenerator } from './infra/temp_random_generator'
+import { HumidityGeneratorService } from './services/humidity'
+import { type IMessaging, type IRandomGenerator } from './services/interfaces'
+import { TempGeneratorService } from './services/temp'
+import dotenv from 'dotenv'
 
-const TEMP_MIN = 10;
-const TEMP_MAX = 45;
+function main (): void {
+  const { logger, tempRandom, humidityRandom, messaging } = setup()
 
-const HUMIDITY_MIN = 0.3;
-const HUMIDITY_MAX = 0.8;
+  logger.info('application running')
 
-const INTERVAL_TIMEOUT = 1000;
-
-function random(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min)) + min
+  startup(tempRandom, humidityRandom, messaging)
 }
 
-type DeviceData = {
-  device: string,
-  value: string,
-  type: "TEMP" | "HUMIDITY"
-}
+function setup () {
+  dotenv.config()
 
-function tempGenerator(): DeviceData {
-  const value = random(TEMP_MIN, TEMP_MAX)
-  
+  const logger = LoggerInitializer.init()
+
+  logger.info('stating application...')
+
+  const messaging = new Messaging(logger)
+  messaging.connect()
+
+  const tempRandom = new TempRandomGenerator(logger)
+  const humidityRandom = new HumidityRandomGenerator(logger)
+
   return {
-    device: "device",
-    value: String(value),
-    type: "TEMP"
+    logger,
+    messaging,
+    tempRandom,
+    humidityRandom
   }
 }
 
-function humidityGenerator(): DeviceData {
-  const value = random(HUMIDITY_MIN, HUMIDITY_MAX)
-  
-  return {
-    device: "device",
-    value: String(value),
-    type: "HUMIDITY"
-  }
-}
+function startup (tempRandom: IRandomGenerator, humidityRandom: IRandomGenerator, messaging: IMessaging) {
+  const tempGeneratorService = new TempGeneratorService(tempRandom, messaging)
+  const humidlyRandomService = new HumidityGeneratorService(humidityRandom, messaging)
 
-function main() {
-  setInterval(() => {
-    console.table(tempGenerator())
-    console.table(humidityGenerator())
-  }, INTERVAL_TIMEOUT)
-
+  tempGeneratorService.do()
+  humidlyRandomService.do()
 }
 
 main()
