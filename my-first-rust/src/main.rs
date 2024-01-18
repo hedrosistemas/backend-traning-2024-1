@@ -1,23 +1,17 @@
-fn main() {
-    // numericos
-    // u8, i8, i16, u16, 32, 64, 128
-    // float32, float64
-    // usize
-    // boleano
-    // string
-
-    let oi = first();
-    println!("{}", oi);
+#[tokio::main]
+async fn main() {
+    my_func().await;
 }
 
-fn first<'joao>() -> &'joao str {
-    let minha = "tafareeeeeeeel";
-    return minha;
-}
+async fn my_func() {}
 
-// Pattern Matching
-// Trait
-// Struct like Rust
-// Enum like Rust
-// Rust Generics
-// Async Rust
+// [x] - Array e vector
+// [x] - Pattern Matching
+// [x] - Struct like Rust
+// [x] - Enum like Rust
+// [x] - Pointer e Smart Pointer
+// [x] - Trait
+// [x] - Rust Generics
+// [x] - Macros
+// [x] - Annotations
+// [ ] - Async Rust
