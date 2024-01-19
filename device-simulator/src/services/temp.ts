@@ -1,10 +1,12 @@
 import { type IRandomGenerator, type IMessaging, type DeviceData } from './interfaces'
 
 export class TempGeneratorService {
+  static mamama = ''
   constructor (
     private readonly randomGenerator: IRandomGenerator,
     private readonly messaging: IMessaging
   ) {
+
   }
 
   public do () {

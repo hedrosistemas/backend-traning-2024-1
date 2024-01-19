@@ -19,3 +19,14 @@
       - cargo
       - Rustc
       - Toolchain - stable
+
+
+
+// MQTT <- subscribe topic
+    // MQTT -> data &[u8]
+        // &[u8] -> struct
+            // log 
+            // dormir
+            // toma banho
+                // -> serializar a msg para o rabbitmq -> &[u8]
+                    // -> publicar para o RabbitMQ
