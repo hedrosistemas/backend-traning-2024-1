@@ -1,0 +1,12 @@
+[package]
+name = "rmq-bridge"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1.35.1", features = ["full"] }
+paho-mqtt = { version = "0.12.3" }
+futures-util = { version = "0.3.26" }
+dotenvy = { version = "0.15.7" }
+env_logger = { version = "0.10.2" }
+log = { version = "0.4.20" }
