@@ -8,5 +8,7 @@ tokio = { version = "1.35.1", features = ["full"] }
 paho-mqtt = { version = "0.12.3" }
 futures-util = { version = "0.3.26" }
 dotenvy = { version = "0.15.7" }
-env_logger = { version = "0.10.2" }
+env_logger = { version = "0.11.0" }
 log = { version = "0.4.20" }
+serde = { version = "1.0.195", features = ["derive"] }
+serde_json = { version = "1.0.111" }

@@ -1,7 +1,7 @@
 mod infra;
 mod services;
 
-use crate::infra::mqtt_messaging::MQTTMessaging;
+use crate::{infra::mqtt_messaging::MQTTMessaging, services::service::BridgeServiceImpl};
 use log::info;
 
 #[tokio::main]
@@ -11,18 +11,16 @@ async fn main() {
 
     info!("starting application...");
 
-    MQTTMessaging::new().await.expect("MQTT connection failure");
+    let service = BridgeServiceImpl::new();
+
+    let mut messaging = MQTTMessaging::new(Box::new(service));
+
+    messaging.subscribe("HedroTraining2024/#".into(), 2);
+
+    messaging
+        .connect()
+        .await
+        .expect("failure to connect to MQTT");
 
     info!("MQTT connected!");
 }
-
-// [x] - Array e vector
-// [x] - Pattern Matching
-// [x] - Struct like Rust
-// [x] - Enum like Rust
-// [x] - Pointer e Smart Pointer
-// [x] - Trait
-// [x] - Rust Generics
-// [x] - Macros
-// [x] - Annotations
-// [x] - Async Rust
