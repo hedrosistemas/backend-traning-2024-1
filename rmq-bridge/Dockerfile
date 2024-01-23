@@ -8,7 +8,7 @@ RUN cargo build --release
 FROM rust:alpine
 
 WORKDIR /app
-COPY .env ./
+COPY .env ./.env
 # RUN apt install libssl-dev build-essential cmake pkg-config llvm-dev libclang-dev clang libmosquitto-dev
 COPY --from=build /build/target/release/rmq-bridge ./rmq-bridge
 

@@ -16,3 +16,21 @@ services:
       - 8883:8883
       - 8083:8083
       - 18083:18083
+    networks:
+      - my-network
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - 15672:15672 # porta da dashbaord web -> localhost:15672
+      - 5672:5672 # porta do broker
+      - 15692:15692
+    networks:
+      - my-network
+
+networks:
+  my-network:
