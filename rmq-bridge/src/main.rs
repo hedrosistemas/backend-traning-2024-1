@@ -15,7 +15,10 @@ async fn main() {
     info!("starting application...");
 
     let mut rmq_messaging = RabbitMQMessaging::new();
-    rmq_messaging.connect().await;
+    rmq_messaging
+        .connect()
+        .await
+        .expect("rabbitmq connection failure!");
 
     let service = BridgeServiceImpl::new(Box::new(rmq_messaging));
 
