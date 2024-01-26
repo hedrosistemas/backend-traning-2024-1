@@ -1,0 +1,14 @@
+[package]
+name = "rmq-consumer"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1.35.1", features = ["full"] }
+futures-util = { version = "0.3.26" }
+env_logger = { version = "0.11.0" }
+log = { version = "0.4.20" }
+serde = { version = "1.0.195", features = ["derive"] }
+serde_json = { version = "1.0.111" }
+lapin = { version = "2.3.1" }
+async-trait = { version = "0.1.77" }
