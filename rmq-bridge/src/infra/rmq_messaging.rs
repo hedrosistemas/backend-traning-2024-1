@@ -11,39 +11,28 @@ struct RabbitMQConfigs {
     password: String,
 }
 
+pub struct RabbitMQConnection {}
+
 pub struct RabbitMQMessaging {
-    conn: Option<Connection>,
-    channel: Option<Channel>,
+    conn: Connection,
+    channel: Channel,
 }
 
 impl RabbitMQMessaging {
-    pub fn new() -> Self {
-        RabbitMQMessaging {
-            conn: None,
-            channel: None,
-        }
+    pub fn new(conn: Connection, channel: Channel) -> Self {
+        RabbitMQMessaging { conn, channel }
     }
 }
 
 #[async_trait]
 impl Messaging for RabbitMQMessaging {
     async fn publish(&self, destination: String, data: &[u8]) -> Result<(), ()> {
-        if self.channel.is_none() {
-            error!("connection wasn't established yet");
-            return Err(());
-        }
-
         match self
             .channel
-            .clone()
-            .unwrap()
             .basic_publish(
                 &destination,
                 "",
-                lapin::options::BasicPublishOptions {
-                    mandatory: false,
-                    immediate: false,
-                },
+                lapin::options::BasicPublishOptions::default(),
                 data,
                 BasicProperties::default(),
             )
@@ -61,7 +50,11 @@ impl Messaging for RabbitMQMessaging {
     }
 }
 
-impl RabbitMQMessaging {
+impl RabbitMQConnection {
+    pub fn new() -> Self {
+        return RabbitMQConnection {};
+    }
+
     fn envs(&self) -> Result<RabbitMQConfigs, ()> {
         let Ok(host) = env::var("RABBITMQ_HOST") else {
             error!("failed to read RABBITMQ_HOST env");
@@ -91,7 +84,7 @@ impl RabbitMQMessaging {
         })
     }
 
-    pub async fn connect(&mut self) -> Result<(), ()> {
+    pub async fn connect(&mut self) -> Result<(Connection, Channel), ()> {
         let envs = self.envs()?;
 
         info!("starting rabbitmq connection...");
@@ -117,9 +110,6 @@ impl RabbitMQMessaging {
 
         info!("rabbitmq channel created!");
 
-        self.conn = Some(conn);
-        self.channel = Some(channel);
-
-        Ok(())
+        Ok((conn, channel))
     }
 }

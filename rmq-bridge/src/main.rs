@@ -2,7 +2,10 @@ mod infra;
 mod services;
 
 use crate::{
-    infra::{mqtt_messaging::MQTTMessaging, rmq_messaging::RabbitMQMessaging},
+    infra::{
+        mqtt_messaging::MQTTMessaging,
+        rmq_messaging::{RabbitMQConnection, RabbitMQMessaging},
+    },
     services::service::BridgeServiceImpl,
 };
 use log::info;
@@ -14,11 +17,12 @@ async fn main() {
 
     info!("starting application...");
 
-    let mut rmq_messaging = RabbitMQMessaging::new();
-    rmq_messaging
+    let (rmq_conn, rmq_channel) = RabbitMQConnection::new()
         .connect()
         .await
         .expect("rabbitmq connection failure!");
+
+    let rmq_messaging = RabbitMQMessaging::new(rmq_conn, rmq_channel);
 
     let service = BridgeServiceImpl::new(Box::new(rmq_messaging));
 

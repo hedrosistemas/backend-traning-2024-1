@@ -82,7 +82,7 @@ impl MQTTMessaging {
 
         let mut stream = client.get_stream(2048);
         while let Some(opt_infos) = stream.next().await {
-            self.handler(opt_infos);
+            self.handler(opt_infos).await;
         }
 
         Ok(())
