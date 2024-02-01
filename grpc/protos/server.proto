@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package server;
+
+message ListIoTDataRequest {
+}
+
+enum IoTDataType {
+  TEMPERATURE = 0;
+  HUMIDITTY = 1;
+}
+
+message IoTData {
+  string device = 1;
+  IoTDataType type = 3;
+  string value = 2;
+}
+
+message ListIoTDataResponse {
+  repeated IoTData data = 1;
+}
+
+service IoTDataServices {
+  rpc ListIoTData (ListIoTDataRequest) returns (ListIoTDataResponse) {}
+}
